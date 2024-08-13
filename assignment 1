@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string.h>
 using namespace std;
@@ -11,48 +10,49 @@ struct student {
 
 
 int main() {
-    
+   
     int size ;
     cout << "Enter size of records you want : ";
     cin >> size;
     student S[size];
     int t;
-    
+   
     do {
         cout << "\n1: Enter record : " << "\n";
         cout << "2: Display Record : " << "\n";
         cout << "3: Display list in ascending order of rollno : " << "\n";
-        cout << "4: Exit" << "\n";
-        cout << "\nEnter your choice (1,2,3,4) " << "\n";
-        
+        cout << "4: Display records in alphabetical order of names : " <<"\n";
+        cout << "5: Exit" << "\n";
+        cout << "\nEnter your choice (1,2,3,4,5) " << "\n";
+       
         int num;
         cin >> num;
-        
+       
         switch(num) {
-            
+           
             case 1:
             for (int i = 0; i < size; i++){
                 cout << "\nEnter detais " << "\n";
-                
+               
                 cout << "Rollno : ";
                 cin >> S[i].rollno;
-                
+               
                 cout << "Name : ";
                 cin >> S[i].name;
-                
+               
                 cout << "SGPA : ";
                 cin >> S[i].sgpa;
                 cout << "\n";
             }
             break;
-            
+           
             case 2:
             cout << "\nRollno\t\t\tName\t\t\tSGPA" << "\n\n";
             for (int i = 0; i < size; i++){
-                cout << S[i].rollno << "\t\t\t\t" << S[i].name << "\t\t\t" << S[i].sgpa << "\n";
+                cout << S[i].rollno << "\t\t\t\t" << S[i].name << "\t\t\t\t" << S[i].sgpa << "\n";
             }
             break;
-            
+           
             case 3:
             int i,j;
             for(i = 1; i < size; i++){
@@ -68,13 +68,28 @@ int main() {
                 S[j+1] = t;
             }
             break;
+           
+            case 4: {
+                int gap = size / 2;
+                while (gap >= 1) {
+                for (int i = gap; i < size; i++) {
+                    student temp = S[i];
+                    int j;
+                        for (j = i; j >= gap && S[j - gap].name > temp.name; j -= gap) {
+                            S[j] = S[j - gap];
+                        }
+                    S[j] = temp;
+                }
+                gap /= 2;
+                }
+            }
+            break;
             
-            case 4:
+            case 5:
                 return 0;
-            
         }
         cout << "\nDo you still want to continue : 1 or 0 ? : \n";
-        
+       
         cin >> t;
     } while (t == 1);
     return 0;
