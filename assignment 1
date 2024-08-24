@@ -8,6 +8,52 @@ struct student {
     float sgpa;
 };
 
+float getMax(student S[], int n)
+{
+    float max = S[0].sgpa;
+    for (int i = 1; i < n; i++)
+        if (S[i].sgpa > max)
+            max = S[i].sgpa;
+    return max;
+}
+
+void countSort(student S[], int n, int exp)
+{
+
+    student output[n];
+    int count[10] = {0};
+
+    for (int i = 0; i < n; i++)
+       count[int(S[i].sgpa * 10 / exp) % 10]++;
+
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(int(S[i].sgpa * 10) / exp) % 10] - 1] = S[i];
+        count[int(S[i].sgpa * 10 / exp) % 10]--;
+    }
+
+    for (int i = 0; i < n; i++)
+        S[i] = output[i];
+}
+
+
+void radixsort(student S[], int n)
+{
+    float max = getMax(S, n);
+
+    for (int exp = 1; max * 10 / exp > 0; exp *= 10)
+        countSort(S, n, exp);
+}
+
+void print(student S[], int n)
+{
+    cout << "\nName\t\t\tRollno\t\t\tSGPA" << "\n\n";
+    for (int i = 0; i < n; i++) {
+        cout << S[i].name << "\t\t\t" << S[i].rollno << "\t\t\t" << S[i].sgpa << "\n";
+    }
+}
 
 int main() {
    
@@ -22,8 +68,9 @@ int main() {
         cout << "2: Display Record : " << "\n";
         cout << "3: Display list in ascending order of rollno : " << "\n";
         cout << "4: Display records in alphabetical order of names : " <<"\n";
-        cout << "5: Exit" << "\n";
-        cout << "\nEnter your choice (1,2,3,4,5) " << "\n";
+        cout << "5: Display SGPA in ascending order : " << "\n";
+        cout << "6: Exit" << "\n";
+        cout << "\nEnter your choice (1,2,3,4,5,6) " << "\n";
        
         int num;
         cin >> num;
@@ -34,11 +81,11 @@ int main() {
             for (int i = 0; i < size; i++){
                 cout << "\nEnter detais " << "\n";
                
-                cout << "Rollno : ";
-                cin >> S[i].rollno;
-               
                 cout << "Name : ";
                 cin >> S[i].name;
+               
+                cout << "Rollno : ";
+                cin >> S[i].rollno;
                
                 cout << "SGPA : ";
                 cin >> S[i].sgpa;
@@ -47,10 +94,7 @@ int main() {
             break;
            
             case 2:
-            cout << "\nRollno\t\t\tName\t\t\tSGPA" << "\n\n";
-            for (int i = 0; i < size; i++){
-                cout << S[i].rollno << "\t\t\t\t" << S[i].name << "\t\t\t\t" << S[i].sgpa << "\n";
-            }
+                print(S, size);
             break;
            
             case 3:
@@ -67,6 +111,7 @@ int main() {
                 }
                 S[j+1] = t;
             }
+            print(S, size);
             break;
            
             case 4: {
@@ -82,10 +127,17 @@ int main() {
                 }
                 gap /= 2;
                 }
+                print(S, size);
             }
             break;
             
-            case 5:
+            case 5 :
+                radixsort(S, size);
+                print(S, size);
+            
+            break;
+            
+            case 6:
                 return 0;
         }
         cout << "\nDo you still want to continue : 1 or 0 ? : \n";
