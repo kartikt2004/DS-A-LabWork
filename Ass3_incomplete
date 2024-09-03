@@ -2,29 +2,96 @@
 #include <string.h>
 using namespace std;
 
-struct node {
+struct Node {
 
     string name;
-    string artist;
-    node * nxt;
+    Node * next;
 };
-int main() {
-    node * head;
-    node * p = new node;
-    p -> data = 10;
-    p -> nxt = NULL;
+
+Node *head=NULL;
+
+void insert_start (string n) {
+    Node * new_node = new Node;
+    new_node -> name = n;
+    new_node -> next = head;
+    head = new_node;
+}
+
+void insert_end (string n) {
     
+    Node * new_node = new Node;
+    new_node->name = n;
+    new_node->next = NULL;
+    
+}
+
+
+void display (){
+    struct Node * P = head;
+    while (P != NULL) {
+        cout << P -> name << endl;
+        P = P -> next;
+    }
+    cout << endl;
+}
+int main() {
+    Node * head;
+    Node * new_node = new Node;
+   
     if (head == NULL) {
-        head = p;
+        head = new_node;
     }
     else {
-        q = head;
-        while (q -> nxt != NULL) {
-            q = q -> nxt;
+        Node * temp = head;
+        while (temp -> next != NULL) {
+            temp = temp -> next;
         }
-        q -> nxt = p;
+        temp -> next = new_node;
     }
     
-
+    insert_start("Arman");
+    insert_start("Sarvesh");
+    insert_start("Kartik");
+ 
+    cout << "1 : Add song : " << "\n";
+    cout << "2 : Remove song : " << "\n";
+    cout << "3 : Display playlist : " << "\n";
+    cout << "4 : Play specific song : " << "\n";
+    cout << "5 : Exit. " << "\n";
+    cout << endl;
+    cout << "Enter your chioce (1,2,3,4,5) : " << "\n";
+    
+    int a;
+    cin >> a;
+    
+    switch(a) {
+        case 1 :
+            cout << "\nAdd song at : " << "\n";
+            cout << "1 : Beginning " << "\n";
+            cout << "2 : End " << "\n";
+            cout << "3 : Position " << "\n";
+            cout << "\nEnter your choice (1,2,3) : " << "\n";
+            
+            int b;
+            cin >> b;
+            
+            switch(b) {
+                case 1 :
+                    insert_start("KK");
+                    display();
+                    break;
+                    
+                case 2 :
+                    insert_end("KT");
+                    display();
+                    break;
+                    
+                case 3 :
+                    
+            
+            }
+    }
+    
     return 0;
 }
+
