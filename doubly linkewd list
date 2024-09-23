@@ -1,0 +1,209 @@
+#include <iostream>
+using namespace std;
+
+struct node {
+    int data;
+    node *next;
+    node *prev; // Pointer to the previous song
+};
+
+class list {
+    node *head;
+
+public:
+    list() {
+        head = NULL;
+    }
+
+    ~list() {
+        // Destructor to free memory
+        node* temp;
+        while (head != NULL) {
+            temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+
+    void insert_end(int data) {
+        node* nn = new node;
+        nn->data  = data;
+        nn->next = NULL;
+        nn->prev = NULL; // Initialize prev pointer
+
+        if (head == NULL) {
+            head = nn; // If list is empty, new node is the head
+        } else {
+            node* temp = head;
+            while (temp->next != NULL) {
+                temp = temp->next; // Traverse to the end of the list
+            }
+            temp->next = nn; // Link the last node to new node
+            nn->prev = temp; // Link new node back to the last node
+        }
+    }
+    
+    void insert_start(int data) {
+        node* nn = new node;
+        nn -> data = data;
+        nn -> next = head;
+        nn -> prev = NULL;
+        
+        if (head != NULL) {
+            head->prev = nn; 
+        }
+        head = nn; 
+    }
+    
+    void insert_at_pos(int position, int data) {
+        
+        node* nn = new node;
+        nn->data = data;
+        node* temp = head;
+        
+        if (position <= 0) { 
+            insert_start(data); // Insert at start for invalid position
+            return;
+        }
+        
+        if (temp == NULL) { 
+            insert_end(data); // If position exceeds list size, insert at end
+            return;
+        }
+
+        if (head == NULL) { 
+            if (position == 0) { 
+                head = nn; // If list is empty and position is 0, make it the head
+                return;
+            } else {
+                delete nn; // If position is greater than 0 in an empty list, discard new node
+                return;
+            }
+        }
+
+        
+
+        for (int i = 0; i < position - 1 && temp != NULL; i++) {
+            temp = temp->next; // Traverse to the desired position
+        }
+
+        nn->next = temp; // New node points to current node at position
+        nn->prev = temp->prev; // New node's prev points to previous node
+
+        if (temp->prev != NULL) {
+            temp->prev->next = nn; // Link previous node to new node
+        } else {
+            head = nn; // If inserting at the start, update head
+        }
+        
+        temp->prev = nn; // Current node's prev points to new node
+    }
+    
+    void remove_data(int data) {
+        node* temp = head;
+
+        // Remove from the beginning
+        while (temp != NULL && temp->data == data) {
+            head = temp->next; // Move head forward
+            if (head != NULL) {
+                head->prev = NULL; // Update prev pointer of new head
+            }
+            delete temp; // Delete old head
+            temp = head; // Move to next node
+        }
+
+        // Remove from the rest of the list
+        while (temp != NULL) {
+            while (temp != NULL && temp->data != data) {
+                temp = temp->next; // Find the song to remove
+            }
+
+            if (temp == NULL) {
+                return; // If not found, exit
+            }
+
+            if (temp->next != NULL) {
+                temp->next->prev = temp->prev; // Link next node back to previous node
+            }
+            if (temp->prev != NULL) {
+                temp->prev->next = temp->next; // Link previous node forward to next node
+            }
+            delete temp; // Delete current node
+            temp = (temp->next != NULL) ? temp->next : temp->prev; // Move to next or previous node
+        }
+        cout << "Removed" << endl;
+    }
+
+    void display() {
+        node* temp = head;
+        while (temp -> next != NULL) {
+            cout << temp->data << endl;
+            temp = temp->next;
+        }
+        cout << temp -> data;
+    }
+
+    void searchData(int data) {
+        node* temp = head;
+        while (temp -> next != NULL) {
+            if (temp->data == data) {
+                cout << "Present" << endl;
+                cout << temp -> data << endl;
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Not Present !!" << endl;
+    }
+
+};
+
+int main() {
+    list mylist;
+    
+    /*int key;
+    cout << "Insert at end (1)" << endl;
+    cout << "Insert at start (2)" << endl;
+    cout << "Insert at position (3)" << endl;*/
+    cout << "Insertion at End : " << endl;
+    mylist.insert_end(1);
+    mylist.insert_end(2);
+    mylist.insert_end(3);
+    mylist.insert_end(4);
+    mylist.insert_end(5);
+
+    mylist.display();
+    cout <<"\n"<< endl;
+
+    cout << "Insertion at Start : " << endl;
+    mylist.insert_start(0);
+    mylist.insert_start(-1);
+    
+    mylist.display();
+    cout <<"\n"<< endl;
+    
+    cout << "Insertion at 5th position : " << endl;
+    mylist.insert_at_pos(5, 99);
+    mylist.display();
+    cout <<"\n"<< endl;
+    
+    
+    cout << "Searching for a digit" << endl;
+    cout << "Enter number to be searched : " << endl;
+    int key;
+    cin >> key;
+    mylist.searchData(key);
+    
+    
+    cout << "\nRemove Digit" << endl;
+    cout << "Enter digit to be removed : " << endl;
+    int ToDelete;
+    cin >> ToDelete;
+    mylist.remove_data(ToDelete);
+    
+    cout << "\nAfter removing : " << endl;
+    mylist.display();
+    cout << endl;
+    
+    return 0; 
+}
